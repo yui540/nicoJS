@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script src="nico.js"></script>
+	<script>
+	window.onload = function() {
+		var nico = new Nico({
+			ele: document.getElementById('nico'),
+			width: 600,
+			height: 400,
+			font: 50,
+			color: '#fff', 
+			speed: 3
+		});
+		nico.listen();
+		document.getElementById("btn").onclick = function() {
+			nico.send(document.getElementById("comment").value);
+		};
+	}
+	</script>
+</head>
+<body>
+<div id="nico"></div>
+<input type="text" id="comment" placeholder="コメント" />
+<button id="btn">送信</button>
+</body>
+</html>
