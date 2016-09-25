@@ -1,6 +1,6 @@
 /**
  *
- * nico.js
+ * nico-css.js
  *
  * @author yuki540
  * @version 1.0
@@ -8,14 +8,12 @@
  * @twitter eriri_jp
  *
  */
-function Nico(params) {
+function NicoCSS(params) {
 	// data
 	this.timer = null;
-	this.l_timer = null;
 	this.comment = [];
 	this.font = params.font;
 	this.color = params.color;
-	this.speed = params.speed;
 	this.width = params.width;
 	this.height = params.height;
 	// element
@@ -23,6 +21,7 @@ function Nico(params) {
 	this.ele.style.whiteSpace = 'nowrap';
 	this.ele.style.overflow = 'hidden';
 	this.ele.style.position = 'relative';
+	this.ele.style.backgroundColor = '#4c4c4c';
 	this.ele.style.width = this.width+'px';
 	this.ele.style.height = this.height+'px';
 }
@@ -31,14 +30,13 @@ function Nico(params) {
  * 特定のコメントを流し続ける
  * @param text: 複数のメッセージ
  */
-Nico.prototype.loop = function(text) {
-	var self = this;
-	var i = 0;
-	var length = text.length-1;
+NicoCSS.prototype.loop = function(text) {
 	this.listen();
+	var i=0;
+	var self = this;
 	self.send(text[i++]);
-	this.l_timer = setInterval(function() {
-		if(length < i) i = 0;
+	this.timer = setInterval(function() {
+		if(i > (text.length-1)) i = 0;
 		self.send(text[i++]);
 	}, 2000);
 };
@@ -46,37 +44,24 @@ Nico.prototype.loop = function(text) {
 /**
  * コメントの待機
  */
-Nico.prototype.listen = function() {
-	var self = this;
-	this.timer = setInterval(function() {
-		self.flow();
-	}, 15);
+NicoCSS.prototype.listen = function() {
+	var style = '<style id="nicojs-style">';
+	style += '@keyframes flow {';
+	style += '0% {left:100%;}';
+	style += '99% {opacity:1;}';
+	style += '100%{opacity:0;left: -1000px;}}';
+	style += '.nicojs-comment{';
+	style += 'animation: flow 8s linear 0s forwards;}';
+	style += '</style>';
+	document.head.innerHTML = style;
 };
 
 /**
  * コメントの停止
  */
-Nico.prototype.stop = function() {
+NicoCSS.prototype.stop = function() {
 	if(this.timer !== null)
 		clearInterval(this.timer);
-	if(this.l_timer !== null)
-		clearInterval(this.l_timer);
-};
-
-/**
- * コメントを流す
- */
-Nico.prototype.flow = function() {
-	var self = this;
-	this.comment.forEach(function(val, key) {
-		if(val.x > -1000) {
-			val.x -= self.speed;
-			val['ele'].style.transform = 'translate('+val.x+'px,'+val.y+'px)';
-		} else {
-			self.comment.splice(key, 1);
-			self.ele.removeChild(self.ele.childNodes[key]);
-		}
-	});
 };
 
 /**
@@ -84,7 +69,7 @@ Nico.prototype.flow = function() {
  * @param text: メッセージ
  * @param color: 16進数カラーコード（オプション）
  */
-Nico.prototype.send = function(text, color) {
+NicoCSS.prototype.send = function(text, color) {
 	text = text.replace('<', '&lt;');
 	text = text.replace('>', '&gt;');
 	text = text.replace(/(\'|\")/g, '');
@@ -96,17 +81,12 @@ Nico.prototype.send = function(text, color) {
 	});
 	var last = this.comment.length-1;
 	comment.innerHTML = text;
+	comment.className = 'nicojs-comment';
 	comment.style.position = 'absolute';
-	comment.style.transform = 'translate('+this.comment[last].x+'px,'+this.comment[last].y+'px)';
+	comment.style.top = this.comment[last].y+'px';
 	comment.style.fontSize = this.font+'px';
 	comment.style.textShadow = '2px 2px 2px #111';
 	comment.style.color = (color === undefined) ?
 		this.color : color;
 	this.ele.appendChild(comment);
 };
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 /**
  *
- * nico.js
+ * nico-canvas.js
  *
  * @author yuki540
  * @version 1.0
@@ -8,7 +8,7 @@
  * @twitter eriri_jp
  *
  */
-function Nico(params) {
+function NicoCanvas(params) {
 	// data
 	this.timer = null;
 	this.l_timer = null;
@@ -19,19 +19,18 @@ function Nico(params) {
 	this.width = params.width;
 	this.height = params.height;
 	// element
-	this.ele = params.ele;
-	this.ele.style.whiteSpace = 'nowrap';
-	this.ele.style.overflow = 'hidden';
-	this.ele.style.position = 'relative';
-	this.ele.style.width = this.width+'px';
-	this.ele.style.height = this.height+'px';
+	this.canvas = params.canvas;
+	this.canvas.width = this.width;
+	this.canvas.height = this.height;
+	this.canvas.style.backgroundColor = "#4c4c4c";
+	this.ctx = this.canvas.getContext('2d');
 }
 
 /**
  * 特定のコメントを流し続ける
  * @param text: 複数のメッセージ
  */
-Nico.prototype.loop = function(text) {
+NicoCanvas.prototype.loop = function(text) {
 	var self = this;
 	var i = 0;
 	var length = text.length-1;
@@ -46,7 +45,7 @@ Nico.prototype.loop = function(text) {
 /**
  * コメントの待機
  */
-Nico.prototype.listen = function() {
+NicoCanvas.prototype.listen = function() {
 	var self = this;
 	this.timer = setInterval(function() {
 		self.flow();
@@ -56,7 +55,7 @@ Nico.prototype.listen = function() {
 /**
  * コメントの停止
  */
-Nico.prototype.stop = function() {
+NicoCanvas.prototype.stop = function() {
 	if(this.timer !== null)
 		clearInterval(this.timer);
 	if(this.l_timer !== null)
@@ -66,15 +65,19 @@ Nico.prototype.stop = function() {
 /**
  * コメントを流す
  */
-Nico.prototype.flow = function() {
+NicoCanvas.prototype.flow = function() {
+	this.ctx.clearRect(0, 0, this.width, this.height);
 	var self = this;
 	this.comment.forEach(function(val, key) {
 		if(val.x > -1000) {
 			val.x -= self.speed;
-			val['ele'].style.transform = 'translate('+val.x+'px,'+val.y+'px)';
+			self.ctx.save();
+			self.ctx.fillStyle = self.color;
+			self.ctx.font = "bold "+self.font+"px 'ＭＳ Ｐゴシック'";
+			self.ctx.fillText(val.text, val.x, val.y);
+			self.ctx.restore();
 		} else {
 			self.comment.splice(key, 1);
-			self.ele.removeChild(self.ele.childNodes[key]);
 		}
 	});
 };
@@ -84,29 +87,18 @@ Nico.prototype.flow = function() {
  * @param text: メッセージ
  * @param color: 16進数カラーコード（オプション）
  */
-Nico.prototype.send = function(text, color) {
+NicoCanvas.prototype.send = function(text, color) {
 	text = text.replace('<', '&lt;');
 	text = text.replace('>', '&gt;');
 	text = text.replace(/(\'|\")/g, '');
-	var comment = document.createElement('div');
+	color = (color === undefined) ? this.color : color;
 	this.comment.push({
 		x: this.width,
-		y: Math.random()*(this.height-this.font),
-		ele: comment
+		y: Math.random()*(this.height+this.font),
+		color: color,
+		text: text
 	});
-	var last = this.comment.length-1;
-	comment.innerHTML = text;
-	comment.style.position = 'absolute';
-	comment.style.transform = 'translate('+this.comment[last].x+'px,'+this.comment[last].y+'px)';
-	comment.style.fontSize = this.font+'px';
-	comment.style.textShadow = '2px 2px 2px #111';
-	comment.style.color = (color === undefined) ?
-		this.color : color;
-	this.ele.appendChild(comment);
 };
-
-
-
 
 
 

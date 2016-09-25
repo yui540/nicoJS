@@ -1,0 +1,12 @@
+{
+  "name": "nicojs",
+  "version": "1.0.0",
+  "description": "ニコニコ風コメントモジュール",
+  "main": "nico.js",
+  "author": "yuki540",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yuki540net/nicoJS/issues"
+  },
+  "homepage": "https://github.com/yuki540net/nicoJS#readme"
+}
