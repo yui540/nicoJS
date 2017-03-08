@@ -1,85 +1,53 @@
-nicojs
-***************************
-ニコニコ風コメントモジュール
+# nicoJS
+ニコニコ動画風コメントを実装するライブラリ。
 
-## Example
-
-#### nico.js
-``` html:sample.html
-<script src="nico.js"></script>
-<div id="nico"></div>
+## Install
+npm
+```
+npm install nicojs
 ```
 
-``` javascript:nico.js
-var nico = new Nico({
-	ele: document.getElementById('nico'),
-	width: 400,
-	height: 400,
-	font: 30,
-	color: '#fff',
-	speed: 3
-});
-/**
- * 任意のタイミングでコメントを流す
- */
-nico.listen();         // コメント待機
-nico.send('ニコニコ');  // コメント送信
-
-/**
- * 特定のコメントを流し続ける
- */
-nico.loop(['かわいい', 'wwwww', 'なんだこれw']);
+git
+```
+git clone https://github.com/yuki540net/nicoJS
 ```
 
-#### nico-canvas.js[Canvas版]
-``` html:sample.html
-<script src="nico-canvas.js"></script>
-<canvas id="nico"></canvas>
+## Usage
+```demo.js
+NicoJS = require('nicoJS')
+
+let nico = new NicoJS({
+    app       : document.getElementById('app'),
+    width     : 600,
+    height    : 400,
+    font_size : 50,     // opt
+    color     : '#fff'  // opt
+})
 ```
 
-``` javascript:nico-canvas.js
-var nico = new Nico({
-	canvas: document.getElementById('nico'),
-	width: 400,
-	height: 400,
-	font: 30,
-	color: '#fff',
-	speed: 3
-});
-/**
- * 任意のタイミングでコメントを流す
- */
-nico.listen();         // コメント待機
-nico.send('ニコニコ');  // コメント送信
+任意のタイミングでコメントを流す
+```demo.js
+// コメント待機
+nico.listen()
 
-/**
- * 特定のコメントを流し続ける
- */
-nico.loop(['かわいい', 'wwwww', 'なんだこれw']);
+// コメント送信
+nico.send({
+    font_size : 40
+    colot     : '#ff0000',     // opt
+    text      : 'Hello World.' // opt
+})
 ```
 
-#### nico-css.js[cssアニメーション版]
-``` html:sample.html
-<script src="nico-css.js"></script>
-<div id="nico"></div>
+特定のコメントを流し続ける
+```demo.js
+// コメントを流し続ける
+nico.loop([
+    'comment_1',
+    'comment_2',
+    'comment_3',
+    'comment_4'
+])
 ```
 
-``` javascript:nico-css.js
-var nico = new NicoCSS({
-	ele: document.getElementById('nico'),
-	width: 400,
-	height: 400,
-	font: 30,
-	color: '#fff'
-});
-/**
- * 任意のタイミングでコメントを流す
- */
-nico.listen();         // コメント待機
-nico.send('ニコニコ');  // コメント送信
-
-/**
- * 特定のコメントを流し続ける
- */
-nico.loop(['かわいい', 'wwwww', 'なんだこれw']);
-```
+## Lisence
+このライブラリは、MIT Lisenceのもとで公開されています。
