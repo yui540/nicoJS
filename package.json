@@ -1,10 +1,23 @@
 {
   "name": "nicojs",
-  "version": "1.1.0",
-  "description": "ニコニコ風コメントモジュール",
-  "main": "nico.js",
+  "version": "1.1.1",
+  "description": "ニコニコ風コメントを実装するライブラリ",
+  "main": "lib/nicoJS.js",
   "author": "yuki540",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yuki540net/nicoJS.git"
+  },
+  "scripts": {
+    "build": "coffee -o lib/ -cb src/"
+  },
+  "keywords": [
+    "ニコニコ",
+    "ニコニコ動画",
+    "ニコニコ風コメント",
+    "nicoJS"
+  ],
   "bugs": {
     "url": "https://github.com/yuki540net/nicoJS/issues"
   },
