@@ -1,7 +1,7 @@
-class NicoJS
+class nicoJS
 	constructor: (params) ->
 		@timer    = null
-		@_timer   = null
+		@interval = null
 		@fps      = 1000 / 30
 		@step     = 2 * 1000
 		@comments = []
@@ -49,7 +49,7 @@ class NicoJS
 		comment.style.left       = @comments[len].x + 'px'
 		comment.style.top        = @comments[len].y + 'px'
 		comment.style.fontSize   = font_size + 'px'
-		comment.style.textShadow = '2px 2px 1px #333'
+		comment.style.textShadow = '0 0 5px #111'
 		comment.style.color      = color
 		@app.appendChild comment
 
@@ -58,7 +58,8 @@ class NicoJS
 	##
 	flow: ->
 		for i, val of @comments
-			if val.x > -1000
+			end = val.ele.getBoundingClientRect().width * -1
+			if val.x > end
 				val.x -= 4
 				val.ele.style.left = val.x + 'px'
 			else
@@ -89,13 +90,11 @@ class NicoJS
 			text : comments[i++]
 		}
 
-		@_timer = setInterval =>
+		@interval = setInterval =>
 			if len < i 
 				i = 0
 
-			@send {
-				text: comments[i++]
-			}
+			@send { text: comments[i++] }
 		, @step
 
 	##
@@ -103,7 +102,7 @@ class NicoJS
 	##
 	stop: ->
 		clearInterval @timer
-		clearInterval @_timer
+		clearInterval @interval
 	 
 try
 	module.exports = NicoJS
