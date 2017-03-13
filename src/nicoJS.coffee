@@ -105,6 +105,6 @@ class nicoJS
 		clearInterval @interval
 	 
 try
-	module.exports = NicoJS
+	module.exports = nicoJS
 catch e
 	
