@@ -58,6 +58,7 @@ class nicoJS
 	##
 	flow: ->
 		for i, val of @comments
+            # TODO: check is val existing.
 			end = val.ele.getBoundingClientRect().width * -1
 			if val.x > end
 				val.x -= 4
