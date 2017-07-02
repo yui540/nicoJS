@@ -8,9 +8,9 @@ class nicoJS
 
 		@app       = params.app
 		@font_size = params.font_size || 30
-		@color     = params.color || '#fff'
-		@width     = params.width || 500
-		@height    = params.height || 300
+		@color     = params.color     || '#fff'
+		@width     = params.width     || 500
+		@height    = params.height    || 300
 
 		# 描画
 		@render()
@@ -22,56 +22,54 @@ class nicoJS
 		@app.style.whiteSpace = 'nowrap'
 		@app.style.overflow   = 'hidden'
 		@app.style.position   = 'relative'
-		@app.style.width      = @width + 'px'
+		@app.style.width      = @width  + 'px'
 		@app.style.height     = @height + 'px'
 
-		console.log 'nicoJS: https://github.com/yuki540net/nicoJS'
+		console.log 'author:     yuki540'
+		console.log 'hp:         http://yuki540.com'
+		console.log 'repository: https://github.com/yuki540net/nicoJS'
 
 	##
 	# コメントを送信
 	# @param params : (font_size, color, text)
 	##
 	send: (params) ->
-		font_size = params.font_size || @font_size
-		color     = params.color || @color
-		text      = params.text.replace /(<|>|\'|\")/g, ''
+		@font_size = params.font_size || @font_size
+		@color     = params.color     || @color
+		text       = params.text      || ''
+		comment    = document.createElement 'div'
 
-		comment = document.createElement 'div'
-		@comments.push {
+		@comments.push
 			ele : comment
 			x   : @width
-			y   : Math.random() * (@height - font_size)
-		}
+			y   : Math.random() * (@height - @font_size)
+		console.log @comments
 		len = @comments.length - 1
 
 		comment.innerHTML        = text
 		comment.style.position   = 'absolute'
 		comment.style.left       = @comments[len].x + 'px'
 		comment.style.top        = @comments[len].y + 'px'
-		comment.style.fontSize   = font_size + 'px'
+		comment.style.fontSize   = @font_size + 'px'
 		comment.style.textShadow = '0 0 5px #111'
-		comment.style.color      = color
+		comment.style.color      = @color
 		@app.appendChild comment
 
 	##
 	# コメントを流す
 	##
 	flow: ->
-		for i, val of @comments
-            # TODO: check is val existing.
+		for val, i in @comments
 			end = val.ele.getBoundingClientRect().width * -1
 			if val.x > end
 				val.x -= 4
 				val.ele.style.left = val.x + 'px'
-			else
-				@app.removeChild val.ele
-				@comments.splice i, 1
 
 	##
 	# コメント待機
 	##
 	listen: ->
-		@stop() # タイマー停止
+		@stop()
 
 		@timer = setInterval =>
 			@flow()
@@ -85,15 +83,11 @@ class nicoJS
 		i   = 0
 		len = comments.length - 1
 
-		@stop()   # タイマー停止
-		@listen() # コメント待機
-		@send {   # 初期発火
-			text : comments[i++]
-		}
+		@listen()
 
+		@send { text: comments[i++] }
 		@interval = setInterval =>
-			if len < i 
-				i = 0
+			if len < i then i = 0
 
 			@send { text: comments[i++] }
 		, @step
