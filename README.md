@@ -14,9 +14,9 @@ git clone https://github.com/yuki540net/nicoJS
 
 ## Usage
 ```demo.js
-NicoJS = require('nicoJS')
+nicoJS = require('nicoJS')
 
-let nico = new NicoJS({
+let nico = new nicoJS({
     app       : document.getElementById('app'),
     width     : 600,
     height    : 400,
@@ -31,7 +31,7 @@ let nico = new NicoJS({
 nico.listen()
 
 // コメント送信
-nico.send('Hello World.')
+nico.send('Hello World.', '色[option]', 'フォントサイズ[option]')
 ```
 
 特定のコメントを流し続ける

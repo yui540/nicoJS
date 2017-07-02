@@ -4,11 +4,12 @@ coffee  = require 'gulp-coffee'
 uglify  = require 'gulp-uglify'
 
 gulp.task 'default', ->
-	gulp.src './src/*.coffee'
+	gulp.src './src/nico.coffee'
 		.pipe plumber()
 		.pipe coffee { bare: true }
 		.pipe uglify()
 		.pipe gulp.dest './lib'
+		.pipe gulp.dest './debug'
 
 gulp.task 'watch', ->
 	gulp.watch [

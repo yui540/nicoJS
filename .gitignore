@@ -4,5 +4,5 @@ node_modules/
 # .DS_Store
 .DS_Store
 
-# デバック用 HTML
-debug.html
+# デバック用
+debug/

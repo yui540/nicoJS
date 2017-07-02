@@ -1,5 +1,7 @@
 class nicoJS
 	constructor: (params) ->
+		@version = '1.1.8'
+
 		@timer    = null
 		@interval = null
 		@fps      = 1000 / 30
@@ -7,7 +9,7 @@ class nicoJS
 		@comments = []
 
 		@app       = params.app
-		@font_size = params.font_size || 30
+		@font_size = params.font_size || 50
 		@color     = params.color     || '#fff'
 		@width     = params.width     || 500
 		@height    = params.height    || 300
@@ -25,48 +27,61 @@ class nicoJS
 		@app.style.width      = @width  + 'px'
 		@app.style.height     = @height + 'px'
 
-		console.log 'author:     yuki540'
-		console.log 'hp:         http://yuki540.com'
-		console.log 'repository: https://github.com/yuki540net/nicoJS'
+		console.log 'nicoJS@' + @version
+		console.log ' ├─ author     : yuki540'
+		console.log ' ├─ homepage   : http://yuki540.com'
+		console.log ' └─ repository : https://github.com/yuki540net/nicoJS'
+
+	##
+	# サイズ変更
+	# @param width  : 幅
+	# @param height : 高さ
+	##
+	resize: (width, height) ->
+		@width            = width
+		@height           = height
+		@app.style.width  = @width + 'px'
+		@app.style.height = @height + 'px'
 
 	##
 	# コメントを送信
-	# @param params : (font_size, color, text)
+	# @param text      : コメント
+	# @param color     : 色[option]
+	# @param font_size : フォントサイズ[option]
 	##
-	send: (params) ->
-		@font_size = params.font_size || @font_size
-		@color     = params.color     || @color
-		text       = params.text      || ''
-		comment    = document.createElement 'div'
+	send: (text, color, font_size) ->
+		font_size = font_size || @font_size
+		color     = color     || @color
+		text      = text      || ''
+		x         = @width
+		y         = Math.random() * (@height - @font_size)
+		ele       = document.createElement 'div'
 
-		@comments.push
-			ele : comment
-			x   : @width
-			y   : Math.random() * (@height - @font_size)
-		console.log @comments
-		len = @comments.length - 1
+		ele.innerHTML        = text
+		ele.style.position   = 'absolute'
+		ele.style.left       = x + 'px'
+		ele.style.top        = y + 'px'
+		ele.style.fontSize   = font_size + 'px'
+		ele.style.textShadow = '0 0 5px #111'
+		ele.style.color      = color
 
-		comment.innerHTML        = text
-		comment.style.position   = 'absolute'
-		comment.style.left       = @comments[len].x + 'px'
-		comment.style.top        = @comments[len].y + 'px'
-		comment.style.fontSize   = @font_size + 'px'
-		comment.style.textShadow = '0 0 5px #111'
-		comment.style.color      = @color
-		@app.appendChild comment
+		@app.appendChild ele
+		@comments.push { ele: ele, x: x, y: y }
 
 	##
 	# コメントを流す
 	##
 	flow: ->
-		for val, i in @comments
-			end = val.ele.getBoundingClientRect().width * -1
-			if val.x > end
-				val.x -= 4
-				val.ele.style.left = val.x + 'px'
+		len = @comments.length
+
+		for i in [0...len]
+			end = @comments[i].ele.getBoundingClientRect().width * -1
+			if @comments[i].x > end
+				@comments[i].x -= 4
+				@comments[i].ele.style.left = @comments[i].x + 'px'
 
 	##
-	# コメント待機
+	# コメントを待機
 	##
 	listen: ->
 		@stop()
@@ -74,22 +89,22 @@ class nicoJS
 		@timer = setInterval =>
 			@flow()
 		, @fps
-		
+
 	##
 	# 特定のコメントを流し続ける
-	# @param comments : コメント - 配列
+	# @param comments : コメントが入った配列
 	##
 	loop: (comments) ->
 		i   = 0
-		len = comments.length - 1
+		len = comments.length
 
 		@listen()
 
-		@send { text: comments[i++] }
+		@send comments[i++]
 		@interval = setInterval =>
 			if len < i then i = 0
 
-			@send { text: comments[i++] }
+			@send comments[i++]
 		, @step
 
 	##
@@ -98,8 +113,7 @@ class nicoJS
 	stop: ->
 		clearInterval @timer
 		clearInterval @interval
-	 
+
 try
 	module.exports = nicoJS
 catch e
-	
