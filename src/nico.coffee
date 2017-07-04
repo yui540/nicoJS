@@ -5,6 +5,7 @@ class nicoJS
 		@timer    = null
 		@interval = null
 		@fps      = 1000 / 30
+		@distime  = 3 * 1000 / @fps
 		@step     = 2 * 1000
 		@comments = []
 
@@ -48,25 +49,40 @@ class nicoJS
 	# @param text      : コメント
 	# @param color     : 色[option]
 	# @param font_size : フォントサイズ[option]
+	# @param layout    : 位置[option]
 	##
-	send: (text, color, font_size) ->
+	send: (text, color, font_size, layout) ->
+		lay       = layout    || 'naka'
 		font_size = font_size || @font_size
 		color     = color     || @color
 		text      = text      || ''
-		x         = @width
-		y         = Math.random() * (@height - @font_size)
 		ele       = document.createElement 'div'
 
 		ele.innerHTML        = text
 		ele.style.position   = 'absolute'
-		ele.style.left       = x + 'px'
-		ele.style.top        = y + 'px'
 		ele.style.fontSize   = font_size + 'px'
 		ele.style.textShadow = '0 0 5px #111'
 		ele.style.color      = color
 
+		switch lay
+			when 'ue'
+				ele.style.textAlign = 'center'
+				ele.style.top       = '0'
+				ele.style.right     = '0'
+				ele.style.left      = '0'
+			when 'shita'
+				ele.style.textAlign = 'center'
+				ele.style.right     = '0'
+				ele.style.left      = '0'
+				ele.style.bottom    = '0'
+			else
+				x = @width
+				y = Math.random() * (@height - font_size)
+				ele.style.left       = x + 'px'
+				ele.style.top        = y + 'px'
+
 		@app.appendChild ele
-		@comments.push { ele: ele, x: x, y: y }
+		@comments.push { ele: ele, x: x, y: y, lay: lay, timer: 0 }
 
 	##
 	# コメントを流す
@@ -75,10 +91,16 @@ class nicoJS
 		len = @comments.length
 
 		for i in [0...len]
-			end = @comments[i].ele.getBoundingClientRect().width * -1
-			if @comments[i].x > end
-				@comments[i].x -= 4
-				@comments[i].ele.style.left = @comments[i].x + 'px'
+			if @comments[i].lay == 'naka'
+				end = @comments[i].ele.getBoundingClientRect().width * -1
+				if @comments[i].x > end
+					@comments[i].x -= 4
+					@comments[i].ele.style.left = @comments[i].x + 'px'
+			else
+				if @comments[i].timer < @distime
+					@comments[i].timer++
+				else
+					@comments[i].ele.style.display = 'none'
 
 	##
 	# コメントを待機
