@@ -30,5 +30,7 @@
     "gulp-plumber": "^1.1.0",
     "gulp-uglify": "^3.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "coffee-script": "^1.12.7"
+  }
 }
