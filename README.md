@@ -31,7 +31,7 @@ let nico = new nicoJS({
 nico.listen()
 
 // コメント送信
-nico.send('Hello World.', '色[option]', 'フォントサイズ[option]')
+nico.send('Hello World.', '色[option]', 'フォントサイズ[option]', '表示位置[option]')
 ```
 
 特定のコメントを流し続ける
